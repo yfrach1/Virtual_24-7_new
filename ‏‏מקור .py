@@ -5,6 +5,7 @@ pygame.init()
 name1=''
 name2=''
 admin=''
+Engineer=''
 answer = 0
 #----open game console 11
 display_width = 900
@@ -215,7 +216,7 @@ def keyboard():
             clock.tick(100)
     return word
 def button(msg,x,y,w,h,ic,ac,action = None):
-    global answer,name1,name2,admin
+    global answer,name1,name2,admin,Engineer
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     smallText = pygame.font.Font('freesansbold.ttf',20)
@@ -233,8 +234,14 @@ def button(msg,x,y,w,h,ic,ac,action = None):
                 ChooseAlevel()
             elif action == "explain2":
                 explain2()
+            elif action == "name1":
+                insert_name_game1()
+            elif action == "name2":
+                insert_name_game2()
             elif action == "Admin":
                 admin = keyboard()
+            elif action == "Engineer":
+                Engineer = keyboard()
             elif action == "keyboard1":
                 name1 = keyboard()
             elif action == "keyboard2":
@@ -262,9 +269,7 @@ def button(msg,x,y,w,h,ic,ac,action = None):
     textRect.center = ( (x+(w/2)) , (y+(h/2)) )
     gameDisplay.blit(textSurf,textRect)
 
-    
-def game_intro():
-
+def insert_name_game1():
     intro = True
 
     while intro:
@@ -275,6 +280,53 @@ def game_intro():
                 
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Please Enter Your Names", largeText)
+        TextRect.center = ((display_width/2.1),(display_height/7))
+        gameDisplay.blit(TextSurf, TextRect)
+        button("Player1",150,150,150,50,green,bright_green,"keyboard1")
+        button("Player2",550,150,150,50,green,bright_green,"keyboard2")
+        print(name1,name2)
+        if name1 != '' and name2 != '':
+            button("Start Game",350,400,150,50,green,bright_green,"explain1")
+        pygame.display.update()
+        clock.tick(100)
+def insert_name_game2():
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Please Enter Your Name", largeText)
+        TextRect.center = ((display_width/2.1),(display_height/7))
+        gameDisplay.blit(TextSurf, TextRect)
+        button("Player1",350,150,150,50,green,bright_green,"keyboard1")
+        print(name1)
+        pygame.display.update()
+        clock.tick(100)
+                
+def game_intro():
+    global name1,name2,admin,Engineer
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(white)
+        button("Admin",700,600,150,50,green,bright_green,"Admin")
+        button("Engineer",50,600,150,50,green,bright_green,"Engineer")
+        if admin == 'virtual247admin':
+            print("admin exeption")
+        elif Engineer == 'virtual247engineer':
+            print("Engineer exeption")
+        largeText = pygame.font.Font('freesansbold.ttf',50)
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Welcome to Main Menu", largeText)
         TextSurf2, TextRect2 = text_objects("Choose a Game", midText)
@@ -282,12 +334,15 @@ def game_intro():
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
         gameDisplay.blit(TextSurf2, TextRect2)
-        button("Ladders and Snakes",100,300,300,200,green,bright_green,"explain1")
+        button("Ladders and Snakes",100,300,300,200,green,bright_green,"name1")
         gameDisplay.blit(Game1,(100,250))
-        button("Four In Row",500,300,300,200,red,bright_red,"explain2")
+        button("Four In Row",500,300,300,200,red,bright_red,"name2")
         gameDisplay.blit(Game2,(500,250))
         button("QUIT",400,600,100,50,grey,bright_grey,"quit")
-        
+        name1=''
+        name2=''
+        admin=''
+        Engineer=''
       
         pygame.display.update()
         clock.tick(100)
@@ -358,13 +413,8 @@ def explain2():
             if event.type == pygame.QUIT:
               expExit = True
         explainImg2(5,20)
-        button("Admin",300,600,150,50,green,bright_green,"Admin")
-        if admin == 'virtual247admin':
-            print("admin exeption")
-        button("Player1",100,100,150,50,green,bright_green,"keyboard1")
         button("START GAME!",600,600,150,50,green,bright_green,"game2")
         button("<- BACK",100,600,150,50,red,bright_red,"intro")
-        print(name1,name2)
         pygame.display.update()
         clock.tick(100)
 def explain1():
@@ -376,11 +426,6 @@ def explain1():
             if event.type == pygame.QUIT:
               expExit = True
         explainImg1(5,20)
-        button("Admin",300,600,150,50,green,bright_green,"Admin")
-        if admin == 'virtual247admin':
-            print("admin exeption")
-        button("Player1",100,100,150,50,green,bright_green,"keyboard1")
-        button("Player2",100,200,150,50,green,bright_green,"keyboard2")
         button("START GAME!",600,600,150,50,green,bright_green,"game1")
         button("<- BACK",100,600,150,50,red,bright_red,"intro")
         print(name1,name2)
