@@ -6,7 +6,8 @@ name1=''
 name2=''
 admin=''
 Engineer=''
-answer = 0
+correct_player1 = 0
+correct_player2 = 0
 #----open game console 11
 display_width = 900
 display_height = 700
@@ -70,10 +71,29 @@ CubeImg6 = pygame.image.load("cube6.jpg")
 ExplainImg1 = pygame.image.load("explain1.jpg")
 ExplainImg2 = pygame.image.load("explain2.jpg")
 CardImg = pygame.image.load("card.jpg")
+CardImg2 = pygame.image.load("card2.jpg")
 Player1Win = pygame.image.load("player1win.jpg")
 Player2Win = pygame.image.load("player2win.jpg")
 q1 = pygame.image.load("1.jpg")
 q2 = pygame.image.load("2.jpg")
+q3 = pygame.image.load("3.jpg")
+q4 = pygame.image.load("4.jpg")
+q5 = pygame.image.load("5.jpg")
+q6 = pygame.image.load("6.jpg")
+q7 = pygame.image.load("7.jpg")
+q8 = pygame.image.load("8.jpg")
+q9 = pygame.image.load("9.jpg")
+q10 = pygame.image.load("10.jpg")
+q11 = pygame.image.load("11.jpg")
+q12 = pygame.image.load("12.jpg")
+q13 = pygame.image.load("13.jpg")
+q14 = pygame.image.load("14.jpg")
+q15 = pygame.image.load("15.jpg")
+q16 = pygame.image.load("16.jpg")
+q17 = pygame.image.load("17.jpg")
+q18 = pygame.image.load("18.jpg")
+q19 = pygame.image.load("19.jpg")
+
 
 #game 2 loading
 Surf = pygame.display.set_mode((display_width, display_height))
@@ -247,17 +267,33 @@ def button(msg,x,y,w,h,ic,ac,action = None):
             elif action == "keyboard2":
                 name2 = keyboard()
             elif action == "answer1":
-                answer = 1
+                answerQ(1,randcard,1)
             elif action == "answer2":
-                answer = 2
+                answerQ(1,randcard,2)
             elif action == "answer3":
-                answer = 3
+                answerQ(1,randcard,3)
             elif action == "answer4":
-                answer = 4
+                answerQ(1,randcard,4)
+            elif action == "answer1x":
+                answerQ(2,randcard,1)
+            elif action == "answer2x":
+                answerQ(2,randcard,2)
+            elif action == "answer3x":
+                answerQ(2,randcard,3)
+            elif action == "answer4x":
+                answerQ(2,randcard,4)
             elif action == "intro":
                 game_intro()
-            elif action == "card":
+            elif action == "card1":
                 card()
+            elif action == "card2":
+                card2()
+            elif action == "yes":
+                print("Delete done")
+                game_intro()
+            elif action == "no":
+                print("No deleted")
+                game_intro()
             elif action == "quit":
                 pygame.quit()
                 quit()
@@ -285,6 +321,7 @@ def insert_name_game1():
         gameDisplay.blit(TextSurf, TextRect)
         button("Player1",150,150,150,50,green,bright_green,"keyboard1")
         button("Player2",550,150,150,50,green,bright_green,"keyboard2")
+        button("Back",350,200,150,50,red,bright_red,"intro")
         print(name1,name2)
         if name1 != '' and name2 != '':
             button("Start Game",350,400,150,50,green,bright_green,"explain1")
@@ -306,9 +343,32 @@ def insert_name_game2():
         gameDisplay.blit(TextSurf, TextRect)
         button("Player1",350,150,150,50,green,bright_green,"keyboard1")
         print(name1)
+        if name1 != '' :
+            button("Start Game",350,400,150,50,green,bright_green,"explain2")
         pygame.display.update()
         clock.tick(100)
+def EngineerMode():
+    engimode = True
+    
+    while engimode:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
                 
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        midText = pygame.font.Font('freesansbold.ttf',40)
+        TextSurf, TextRect = text_objects("Hello Engineer", largeText)
+        TextSurf2, TextRect2 = text_objects("Are you sure you want delete the Score?", midText)
+        button("YES",100,300,300,200,green,bright_green,"yes")
+        button("NO",500,300,300,200,red,bright_red,"no")
+        TextRect.center = ((display_width/2.1),(display_height/7))
+        TextRect2.center = ((display_width/2),(display_height/4))
+        gameDisplay.blit(TextSurf, TextRect)
+        gameDisplay.blit(TextSurf2, TextRect2)
+        pygame.display.update()
+        clock.tick(100)
 def game_intro():
     global name1,name2,admin,Engineer
     intro = True
@@ -326,6 +386,7 @@ def game_intro():
             print("admin exeption")
         elif Engineer == 'virtual247engineer':
             print("Engineer exeption")
+            EngineerMode()
         largeText = pygame.font.Font('freesansbold.ttf',50)
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Welcome to Main Menu", largeText)
@@ -359,9 +420,9 @@ def explainImg2(x,y):
     gameDisplay.blit(ExplainImg2,(x,y))
 def Cube(msg):
     x = display_width * 0.80
-    y = display_width * 0.22
+    y = display_width * 0.10
     if msg == 1:
-        gameDisplay.blit(CubeImg1,(x,y))
+        gameDisplay.blit(CubeImg1,(x,y))        
     elif msg == 2:
         gameDisplay.blit(CubeImg2,(x,y))
     elif msg == 3:
@@ -375,15 +436,20 @@ def Cube(msg):
 def chooseQ(x):
     if x == 1:
         gameDisplay.blit(q1,(150,100))
-    if x == 2:
+    elif x == 2:
         gameDisplay.blit(q2,(150,100))
-def answerQ(x,y):
-    if x == 1 and y == 3: return True
-    elif x == 2 and y == 4: return True
+def answerQ(x,y,z):
+    global correct_player1,correct_player2
+    if x == 1 and y == 1 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 1 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 2 and z == 4: correct_player1 += 1
+    elif x == 2 and y == 2 and z == 4: correct_player2 += 1
+    game1()
     #----------complete the questions-----------------------!@$!#$!#%#!@$!@#
     
 def card():
-    global answer,Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change
+    global answer,Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change,correct_player1
+    global randcard
     cardExit = False
     randcard = random.randrange(1,3,1)
     while not cardExit:
@@ -392,15 +458,29 @@ def card():
               cardExit = True
         gameDisplay.fill(white)
         chooseQ(randcard)
-        button("1",700,550,100,100,reuven,bright_reuven,"answer1")
-        button("2",500,550,100,100,reuven,bright_reuven,"answer2")
+        button("1",610,550,100,100,reuven,bright_reuven,"answer1")
+        button("2",460,550,100,100,reuven,bright_reuven,"answer2")
         button("3",300,550,100,100,reuven,bright_reuven,"answer3")
-        button("4",100,550,100,100,reuven,bright_reuven,"answer4")
+        button("4",150,550,100,100,reuven,bright_reuven,"answer4")
         button("<- BACK",100,200,150,50,red,bright_red,"game1")
-        if answerQ(randcard,answer):
-            print("correct")
-            game1()
-        
+        pygame.display.update()
+        clock.tick(100)
+def card2():
+    global answer,Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change,correct_player1
+    global randcard
+    cardExit = False
+    randcard = random.randrange(1,3,1)
+    while not cardExit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+              cardExit = True
+        gameDisplay.fill(white)
+        chooseQ(randcard)
+        button("1",610,550,100,100,reuven,bright_reuven,"answer1x")
+        button("2",460,550,100,100,reuven,bright_reuven,"answer2x")
+        button("3",300,550,100,100,reuven,bright_reuven,"answer3x")
+        button("4",150,550,100,100,reuven,bright_reuven,"answer4x")
+        button("<- BACK",100,200,150,50,red,bright_red,"game1")
         pygame.display.update()
         clock.tick(100)
     
@@ -434,6 +514,7 @@ def explain1():
 def game1():
     global Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change
     global Board_x,Board_y,Player1_x,Player1_y,Player2_x,Player2_y
+    global correct_player1,correct_player2
     Cube_Number = random.randrange(1,7,1)
     #------------------------
     gameExit = False
@@ -529,8 +610,11 @@ def game1():
         if Player2_x > 105 and Player2_x < 127 and Player2_y > 0.84 and Player2_y < 100:
                 gameDisplay.blit(Player2Win,(100,100))
         button("QUIT GAME",10,10,150,50,red,bright_red,"intro")
-        button("",720,500,100,150,red,bright_red,"card")
-        gameDisplay.blit(CardImg,(650,450))
+        button("",720,500,100,150,red,bright_red,"card1")
+        button("",720,270,100,150,red,bright_red,"card2")
+        gameDisplay.blit(CardImg,(700,450))
+        gameDisplay.blit(CardImg2,(700,250))
+        print(correct_player1,correct_player2)
         pygame.display.update()
         clock.tick(100)
 
@@ -870,7 +954,7 @@ def ChooseAlevel():
         gameDisplay.blit(EasyGame,(50,200))
         button2("Hard",550,240,270,300,red,bright_red,"Hard")
         gameDisplay.blit(HardGame,(550,200))
-        button2("Quit Game",340,550,250,130,blue,bright_blue,"intro")
+        button("Quit Game",340,550,250,130,blue,bright_blue,"intro")
         gameDisplay.blit(LeaveGame,(330,550))
         pygame.display.update()
         clock.tick(60)
