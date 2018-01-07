@@ -8,6 +8,7 @@ admin=''
 Engineer=''
 correct_player1 = 0
 correct_player2 = 0
+flag = 0
 #----open game console 11
 display_width = 900
 display_height = 700
@@ -236,7 +237,7 @@ def keyboard():
             clock.tick(100)
     return word
 def button(msg,x,y,w,h,ic,ac,action = None):
-    global answer,name1,name2,admin,Engineer
+    global answer,name1,name2,admin,Engineer,correct_player1,correct_player2,flag
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     smallText = pygame.font.Font('freesansbold.ttf',20)
@@ -265,6 +266,8 @@ def button(msg,x,y,w,h,ic,ac,action = None):
             elif action == "keyboard1":
                 name1 = keyboard()
                 explain2()
+            elif action == "keyboard":
+                name1 = keyboard()
             elif action == "keyboard2":
                 name2 = keyboard()
             elif action == "answer1":
@@ -285,6 +288,11 @@ def button(msg,x,y,w,h,ic,ac,action = None):
                 answerQ(2,randcard,4)
             elif action == "intro":
                 game_intro()
+            elif action == "quit and save file":
+                file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\‏‏ScoresLaddersAndSnakes.txt","a+")
+                file.write("Player 1: " + name1 + "  answered " + str(correct_player1) + "  quistions and Player 2: " + name2 +"  answered " + str(correct_player2) + "  quistions\n")
+                file.close()
+                game_intro()
             elif action == "card1":
                 card()
             elif action == "card2":
@@ -292,8 +300,9 @@ def button(msg,x,y,w,h,ic,ac,action = None):
             elif action == "yes":
                 print("Delete done")
                 game_intro()
-            elif action == "no":
-                print("No deleted")
+            elif action == "yesM":
+                print("Massage sended")
+                flag = 1
                 game_intro()
             elif action == "quit":
                 pygame.quit()
@@ -320,7 +329,7 @@ def insert_name_game1():
         TextSurf, TextRect = text_objects("Please Enter Your Names", largeText)
         TextRect.center = ((display_width/2.1),(display_height/7))
         gameDisplay.blit(TextSurf, TextRect)
-        button("Player1",150,150,150,50,green,bright_green,"keyboard1")
+        button("Player1",150,150,150,50,green,bright_green,"keyboard")
         button("Player2",550,150,150,50,green,bright_green,"keyboard2")
         button("Back",350,200,150,50,red,bright_red,"intro")
         if name1 != '' and name2 != '':
@@ -348,6 +357,7 @@ def insert_name_game2():
         pygame.display.update()
         clock.tick(100)
 def EngineerMode():
+    global flag
     engimode = True
     
     while engimode:
@@ -361,16 +371,41 @@ def EngineerMode():
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Hello Engineer", largeText)
         TextSurf2, TextRect2 = text_objects("Are you sure you want delete the Score?", midText)
-        button("YES",100,300,300,200,green,bright_green,"yes")
-        button("NO",500,300,300,200,red,bright_red,"no")
+        if flag == 1:
+            button("YES",300,300,300,200,green,bright_green,"yes")
+            flag = 0
+        button("QUIT",400,600,100,50,grey,bright_grey,"quit")
         TextRect.center = ((display_width/2.1),(display_height/7))
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
         gameDisplay.blit(TextSurf2, TextRect2)
         pygame.display.update()
         clock.tick(100)
+def AdminMode():
+    global flag
+    adminmode = True
+    
+    while adminmode:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        midText = pygame.font.Font('freesansbold.ttf',40)
+        TextSurf, TextRect = text_objects("Hello Manager", largeText)
+        TextSurf2, TextRect2 = text_objects(" You details for games are ready for you.", midText)
+        button("Accept Delete",300,300,200,150,green,bright_green,"yesM")
+        button("QUIT",400,600,100,50,grey,bright_grey,"quit")
+        TextRect.center = ((display_width/2.1),(display_height/7))
+        TextRect2.center = ((display_width/2),(display_height/4))
+        gameDisplay.blit(TextSurf, TextRect)
+        gameDisplay.blit(TextSurf2, TextRect2)
+        pygame.display.update()
+        clock.tick(100)    
 def game_intro():
-    global name1,name2,admin,Engineer
+    global name1,name2,admin,Engineer,correct_player1,correct_player2
     intro = True
 
     while intro:
@@ -384,6 +419,7 @@ def game_intro():
         button("Engineer",50,600,150,50,green,bright_green,"Engineer")
         if admin == 'virtual247admin':
             print("admin exeption")
+            AdminMode()
         elif Engineer == 'virtual247engineer':
             print("Engineer exeption")
             EngineerMode()
@@ -404,6 +440,8 @@ def game_intro():
         name2=''
         admin=''
         Engineer=''
+        correct_player1 = 0
+        correct_player2 = 0
       
         pygame.display.update()
         clock.tick(100)
@@ -610,11 +648,12 @@ def game1():
                 gameDisplay.blit(Player1Win,(100,100))
         if Player2_x > 105 and Player2_x < 127 and Player2_y > 0.84 and Player2_y < 100:
                 gameDisplay.blit(Player2Win,(100,100))
-        button("QUIT GAME",10,10,150,50,red,bright_red,"intro")
+        button("QUIT GAME",10,10,150,50,red,bright_red,"quit and save file")
         button("",720,500,100,150,red,bright_red,"card1")
         button("",720,270,100,150,red,bright_red,"card2")
         gameDisplay.blit(CardImg,(700,450))
         gameDisplay.blit(CardImg2,(700,250))
+        
         print(correct_player1,correct_player2,name1,name2)
         pygame.display.update()
         clock.tick(100)
@@ -639,10 +678,10 @@ def GameStart():
             getHumanMove(MainGame)
             gameScore = gameScore + 1
             if WhoWon(MainGame, RedColor):
-                file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\Scores.txt","r+")
-                file.write("Player: " + name1 + "  Beat the computer in "+ str(gameScore) +" moves")
-                winnerImg = WinnerHuman
+                file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\ScoresFourInRow.txt","a+")
+                file.write("Player: " + name1 + "  Beat the computer in " + str(gameScore) + " moves\n")
                 file.close()
+                winnerImg = WinnerHuman
                 break
             turn = COMPUTER
         else:
@@ -669,7 +708,6 @@ def GameStart():
         clock.tick()
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYUP and event.key == K_SPACE) or (event.type == KEYUP and event.key == K_ESCAPE):
-                file.close()
                 pygame.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONUP:
