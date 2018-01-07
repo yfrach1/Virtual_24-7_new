@@ -264,8 +264,7 @@ def button(msg,x,y,w,h,ic,ac,action = None):
                 Engineer = keyboard()
             elif action == "keyboard1":
                 name1 = keyboard()
-                name2 = keyboard()
-                explain1()
+                explain2()
             elif action == "keyboard2":
                 name2 = keyboard()
             elif action == "answer1":
@@ -397,9 +396,9 @@ def game_intro():
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
         gameDisplay.blit(TextSurf2, TextRect2)
-        button("Ladders and Snakes",100,300,300,200,green,bright_green,"keyboard1")
+        button("Ladders and Snakes",100,300,300,200,green,bright_green,"name1")
         gameDisplay.blit(Game1,(100,250))
-        button("Four In Row",500,300,300,200,red,bright_red,"name2")
+        button("Four In Row",500,300,300,200,red,bright_red,"keyboard1")
         gameDisplay.blit(Game2,(500,250))
         button("QUIT",400,600,100,50,grey,bright_grey,"quit")
         name1=''
@@ -497,6 +496,7 @@ def explain2():
         explainImg2(5,20)
         button("START GAME!",600,600,150,50,green,bright_green,"game2")
         button("<- BACK",100,600,150,50,red,bright_red,"intro")
+        print(name1)
         pygame.display.update()
         clock.tick(100)
 def explain1():
@@ -673,7 +673,7 @@ def GameStart():
                 sys.exit()
             elif event.type == MOUSEBUTTONUP:
                 ChooseAlevel() #Start Game again by choosing a level
-
+    
 
 def ReplaceBoard(board,AdditionalToken=None):
     Surf.fill(white)
