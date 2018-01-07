@@ -357,7 +357,7 @@ def insert_name_game2():
         pygame.display.update()
         clock.tick(100)
 def EngineerMode():
-    global flag
+    global flag,Engineer
     engimode = True
     
     while engimode:
@@ -371,10 +371,11 @@ def EngineerMode():
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Hello Engineer", largeText)
         TextSurf2, TextRect2 = text_objects("Are you sure you want delete the Score?", midText)
+        Engineer = ''
+        button("QUIT",400,600,100,50,grey,bright_grey,"intro")
         if flag == 1:
             button("YES",300,300,300,200,green,bright_green,"yes")
             flag = 0
-        button("QUIT",400,600,100,50,grey,bright_grey,"quit")
         TextRect.center = ((display_width/2.1),(display_height/7))
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
@@ -382,7 +383,7 @@ def EngineerMode():
         pygame.display.update()
         clock.tick(100)
 def AdminMode():
-    global flag
+    global flag,admin
     adminmode = True
     
     while adminmode:
@@ -396,8 +397,9 @@ def AdminMode():
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Hello Manager", largeText)
         TextSurf2, TextRect2 = text_objects(" You details for games are ready for you.", midText)
+        admin = ''
         button("Accept Delete",300,300,200,150,green,bright_green,"yesM")
-        button("QUIT",400,600,100,50,grey,bright_grey,"quit")
+        button("QUIT",400,600,100,50,grey,bright_grey,"intro")
         TextRect.center = ((display_width/2.1),(display_height/7))
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
