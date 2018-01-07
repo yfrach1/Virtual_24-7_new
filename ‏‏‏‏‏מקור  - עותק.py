@@ -25,7 +25,7 @@ level = 1
 GameWidth = 7
 GameHeight = 6
 TokenSize = 50
-file = open("Scores.txt","w")
+
 Xspace = int((display_width - GameWidth*TokenSize)/2)
 Yspace = int((display_height - GameHeight*TokenSize)/2)
 #--------colors--------
@@ -323,7 +323,6 @@ def insert_name_game1():
         button("Player1",150,150,150,50,green,bright_green,"keyboard1")
         button("Player2",550,150,150,50,green,bright_green,"keyboard2")
         button("Back",350,200,150,50,red,bright_red,"intro")
-        print(name1,name2)
         if name1 != '' and name2 != '':
             button("Start Game",350,400,150,50,green,bright_green,"explain1")
         pygame.display.update()
@@ -640,8 +639,10 @@ def GameStart():
             getHumanMove(MainGame)
             gameScore = gameScore + 1
             if WhoWon(MainGame, RedColor):
-                file.write("Player score:" + str(gameScore))
+                file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\Scores.txt","r+")
+                file.write("Player: " + name1 + "  Beat the computer in "+ str(gameScore) +" moves")
                 winnerImg = WinnerHuman
+                file.close()
                 break
             turn = COMPUTER
         else:
