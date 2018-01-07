@@ -9,6 +9,9 @@ Engineer=''
 correct_player1 = 0
 correct_player2 = 0
 flag = 0
+file1 = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\‏‏ScoresLaddersAndSnakes.txt","a+")
+file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\ScoresFourInRow.txt","a+")
+
 #----open game console 11
 display_width = 900
 display_height = 700
@@ -94,6 +97,7 @@ q16 = pygame.image.load("16.jpg")
 q17 = pygame.image.load("17.jpg")
 q18 = pygame.image.load("18.jpg")
 q19 = pygame.image.load("19.jpg")
+wrong = pygame.image.load("wrong.jpg")
 
 
 #game 2 loading
@@ -130,6 +134,28 @@ Player1_x= (display_width * 0.06)
 Player1_y= (display_height * 0.78)
 Player2_x= (display_width * 0.06)
 Player2_y= (display_height * 0.75)
+
+def paused():
+    global pause
+    pause = True
+    largeText = pygame.font.SysFont("comicsansms",115)
+    TextSurf, TextRect = text_objects("Wrong", largeText)
+    TextRect.center = ((display_width/2),(display_height/2))
+    gameDisplay.blit(TextSurf, TextRect)
+    
+
+    while pause:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()      
+
+        button("Continue",150,450,100,50,green,bright_green,"unpause")
+
+        pygame.display.update()
+        clock.tick(15)
+        
 def text_objects(text, font):
     global word
     textSurface = font.render(text, True, black)
@@ -236,8 +262,12 @@ def keyboard():
             pygame.display.update()
             clock.tick(100)
     return word
+def deleteContent(pfile):
+    pfile.seek(0)
+    pfile.truncate()
+    pfile.close()
 def button(msg,x,y,w,h,ic,ac,action = None):
-    global answer,name1,name2,admin,Engineer,correct_player1,correct_player2,flag
+    global answer,name1,name2,admin,Engineer,correct_player1,correct_player2,flag,file1,file
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     smallText = pygame.font.Font('freesansbold.ttf',20)
@@ -248,6 +278,8 @@ def button(msg,x,y,w,h,ic,ac,action = None):
         textRect.center = ( (x+(w/2)) , (y+(h/2)))
         if click[0] == 1 and action != None:
             if action == "game1":
+                game1()
+            elif action == "unpause":
                 game1()
             elif action == "explain1":
                 explain1()
@@ -289,21 +321,29 @@ def button(msg,x,y,w,h,ic,ac,action = None):
             elif action == "intro":
                 game_intro()
             elif action == "quit and save file":
-                file = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\‏‏ScoresLaddersAndSnakes.txt","a+")
-                file.write("Player 1: " + name1 + "  answered " + str(correct_player1) + "  quistions and Player 2: " + name2 +"  answered " + str(correct_player2) + "  quistions\n")
-                file.close()
+                file1 = open("C:\\Users\\tairm\\Desktop\\virtual_24-7-tair\\Virtual_24-7_new\\‏‏ScoresLaddersAndSnakes.txt","a+")
+                file1.write("Player 1: " + name1 + "  answered " + str(correct_player1) + "  questions and Player 2: " + name2 +"  answered " + str(correct_player2) + "  questions\n")
+                file1.close()
                 game_intro()
             elif action == "card1":
                 card()
             elif action == "card2":
                 card2()
-            elif action == "yes":
-                print("Delete done")
-                game_intro()
-            elif action == "yesM":
-                print("Massage sended")
+            elif action == "accept":
                 flag = 1
+                print(flag)
+                admin = ''
                 game_intro()
+            elif action == "yes":
+                if flag == 1:
+                    Engineer = ''
+                    deleteContent(file)
+                    deleteContent(file1)
+                    game_intro()
+                elif flag == 0:
+                    print(flag,"Nothing deleted!!! Wait for Manager's !")
+                    pygame.quit()
+                    quit()
             elif action == "quit":
                 pygame.quit()
                 quit()
@@ -357,7 +397,7 @@ def insert_name_game2():
         pygame.display.update()
         clock.tick(100)
 def EngineerMode():
-    global flag,Engineer
+    global flag,admin,Engineer,file,file1
     engimode = True
     
     while engimode:
@@ -371,11 +411,8 @@ def EngineerMode():
         midText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Hello Engineer", largeText)
         TextSurf2, TextRect2 = text_objects("Are you sure you want delete the Score?", midText)
-        Engineer = ''
-        button("QUIT",400,600,100,50,grey,bright_grey,"intro")
-        if flag == 1:
-            button("YES",300,300,300,200,green,bright_green,"yes")
-            flag = 0
+        button("YES",200,600,100,50,green,bright_green,"yes")
+        button("Back",500,600,100,50,grey,bright_grey,"intro")
         TextRect.center = ((display_width/2.1),(display_height/7))
         TextRect2.center = ((display_width/2),(display_height/4))
         gameDisplay.blit(TextSurf, TextRect)
@@ -383,7 +420,7 @@ def EngineerMode():
         pygame.display.update()
         clock.tick(100)
 def AdminMode():
-    global flag,admin
+    global flag,admin,Engineer
     adminmode = True
     
     while adminmode:
@@ -395,19 +432,22 @@ def AdminMode():
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
         midText = pygame.font.Font('freesansbold.ttf',40)
+        lowText = pygame.font.Font('freesansbold.ttf',40)
         TextSurf, TextRect = text_objects("Hello Manager", largeText)
-        TextSurf2, TextRect2 = text_objects(" You details for games are ready for you.", midText)
-        admin = ''
-        button("Accept Delete",300,300,200,150,green,bright_green,"yesM")
-        button("QUIT",400,600,100,50,grey,bright_grey,"intro")
+        TextSurf2, TextRect2 = text_objects(" You'r details for games are ready for you.", midText)
+        TextSurf3, TextRect3 = text_objects("Delete scores?", largeText)
+        button("Accept Delete",200,600,200,50,green,bright_green,"accept")
+        button("Back",500,600,100,50,grey,bright_grey,"intro")
         TextRect.center = ((display_width/2.1),(display_height/7))
         TextRect2.center = ((display_width/2),(display_height/4))
+        TextRect3.center = ((display_width/2.2),(display_height/1.4))
         gameDisplay.blit(TextSurf, TextRect)
         gameDisplay.blit(TextSurf2, TextRect2)
+        gameDisplay.blit(TextSurf3, TextRect3)
         pygame.display.update()
         clock.tick(100)    
 def game_intro():
-    global name1,name2,admin,Engineer,correct_player1,correct_player2
+    global name1,name2,admin,Engineer,correct_player1,correct_player2,flag
     intro = True
 
     while intro:
@@ -478,12 +518,82 @@ def chooseQ(x):
         gameDisplay.blit(q1,(150,100))
     elif x == 2:
         gameDisplay.blit(q2,(150,100))
+    elif x == 3:
+        gameDisplay.blit(q3,(150,100))
+    elif x == 4:
+        gameDisplay.blit(q4,(150,100))
+    elif x == 5:
+        gameDisplay.blit(q5,(150,100))
+    elif x == 6:
+        gameDisplay.blit(q6,(150,100))
+    elif x == 7:
+        gameDisplay.blit(q7,(150,100))
+    elif x == 8:
+        gameDisplay.blit(q8,(150,100))
+    elif x == 9:
+        gameDisplay.blit(q9,(150,100))
+    elif x == 10:
+        gameDisplay.blit(q10,(150,100))
+    elif x == 11:
+        gameDisplay.blit(q11,(150,100))
+    elif x == 12:
+        gameDisplay.blit(q12,(150,100))
+    elif x == 13:
+        gameDisplay.blit(q13,(150,100))
+    elif x == 14:
+        gameDisplay.blit(q14,(150,100))
+    elif x == 15:
+        gameDisplay.blit(q15,(150,100))
+    elif x == 16:
+        gameDisplay.blit(q16,(150,100))
+    elif x == 17:
+        gameDisplay.blit(q17,(150,100))
+    elif x == 18:
+        gameDisplay.blit(q18,(150,100))
+    elif x == 19:
+        gameDisplay.blit(q19,(150,100))
+    
 def answerQ(x,y,z):
     global correct_player1,correct_player2
     if x == 1 and y == 1 and z == 3: correct_player1 += 1
     elif x == 2 and y == 1 and z == 3: correct_player2 += 1
     elif x == 1 and y == 2 and z == 4: correct_player1 += 1
     elif x == 2 and y == 2 and z == 4: correct_player2 += 1
+    elif x == 1 and y == 3 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 3 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 4 and z == 4: correct_player1 += 1
+    elif x == 2 and y == 4 and z == 4: correct_player2 += 1
+    elif x == 1 and y == 5 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 5 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 6 and z == 4: correct_player1 += 1
+    elif x == 2 and y == 6 and z == 4: correct_player2 += 1
+    elif x == 1 and y == 7 and z == 4: correct_player1 += 1
+    elif x == 2 and y == 7 and z == 4: correct_player2 += 1
+    elif x == 1 and y == 8 and z == 4: correct_player1 += 1
+    elif x == 2 and y == 8 and z == 4: correct_player2 += 1
+    elif x == 1 and y == 9 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 9 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 10 and z == 1: correct_player1 += 1
+    elif x == 2 and y == 10 and z == 1: correct_player2 += 1
+    elif x == 1 and y == 11 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 11 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 12 and z == 1: correct_player1 += 1
+    elif x == 2 and y == 12 and z == 1: correct_player2 += 1
+    elif x == 1 and y == 13 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 13 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 14 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 14 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 15 and z == 2: correct_player1 += 1
+    elif x == 2 and y == 15 and z == 2: correct_player2 += 1
+    elif x == 1 and y == 16 and z == 2: correct_player1 += 1
+    elif x == 2 and y == 16 and z == 2: correct_player2 += 1
+    elif x == 1 and y == 17 and z == 3: correct_player1 += 1
+    elif x == 2 and y == 17 and z == 3: correct_player2 += 1
+    elif x == 1 and y == 18 and z == 2: correct_player1 += 1
+    elif x == 2 and y == 18 and z == 2: correct_player2 += 1
+    elif x == 1 and y == 19 and z == 1: correct_player1 += 1
+    elif x == 2 and y == 19 and z == 1: correct_player2 += 1
+    else: paused()
     game1()
     #----------complete the questions-----------------------!@$!#$!#%#!@$!@#
     
@@ -491,7 +601,7 @@ def card():
     global answer,Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change,correct_player1
     global randcard
     cardExit = False
-    randcard = random.randrange(1,3,1)
+    randcard = random.randrange(1,20,1)
     while not cardExit:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -509,7 +619,7 @@ def card2():
     global answer,Player1_x_change,Player1_y_change,Player2_x_change,Player2_y_change,correct_player1
     global randcard
     cardExit = False
-    randcard = random.randrange(1,3,1)
+    randcard = random.randrange(1,20,1)
     while not cardExit:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
