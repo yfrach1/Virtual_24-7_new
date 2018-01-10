@@ -98,6 +98,7 @@ q17 = pygame.image.load("17.jpg")
 q18 = pygame.image.load("18.jpg")
 q19 = pygame.image.load("19.jpg")
 wrong = pygame.image.load("wrong.jpg")
+control = pygame.image.load("control.jpg")
 
 
 #game 2 loading
@@ -660,6 +661,7 @@ def explain1():
         button("START GAME!",600,600,150,50,green,bright_green,"game1")
         button("<- BACK",100,600,150,50,red,bright_red,"intro")
         print(name1,name2)
+        gameDisplay.blit(control,(5,70))
         pygame.display.update()
         clock.tick(100)
 def game1():
